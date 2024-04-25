@@ -1,0 +1,43 @@
+---
+- name: Update and upgrade all packages to the latest version
+  become: true
+  apt:
+      update_cache: yes
+
+- name: install required package
+  become: true
+  apt:
+      name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+      state: present
+
+- name: Add Docker's official GPG key
+  become: true
+  ansible.builtin.apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+
+- name: Add Docker repository
+  become: true
+  ansible.builtin.apt_repository:
+      repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+      state: present
+
+- name: apt update
+  become: true
+  apt:
+      update_cache: yes
+
+- name: install docker
+  become: true
+  apt:
+      name: docker-ce
+  notify:
+      - add_user_to_docker_group
+      - restart_docker_daemon
+  changed_when: yes
+
+- meta: flush_handlers
