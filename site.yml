@@ -21,9 +21,10 @@
                 - apt-transport-https
                 - ca-certificates
                 - curl
+                - gh
+                - git
                 - gnupg
                 - software-properties-common
-                - git
 
       - name: Create directory for Docker's GPG key
         ansible.builtin.file:
